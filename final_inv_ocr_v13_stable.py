@@ -1,6 +1,7 @@
+
 # -*- coding: utf-8 -*-
 # 程序名： final_inv_ocr
-# Author: 张海林
+# Author: AllenZhang.张海林
 
 # 程序功能：电子发票转成图片并识别商品明细
 # v9版：可以先旋转角度。先截二维码识别票号金额。以大写金额作为原点坐标截取其他区域小图识别，以openpyxl操作excel。
@@ -337,7 +338,7 @@ def Ocr_func(ocr_engines, img_path, temp_folder_path,  range_title='', known_dic
 @nb.autojit
 def Loc_range_content_pandas(ocr_engines, df, result_series_orderdic, err_info, known_dict, file_path, temp_folder_path, enhance=False, engine_switch=0): #DataFrame
 
-    user_name, user_code  = '青岛恒祥瑞贸易有限公司', '91370202664517678E'
+    user_name, user_code  = '', ''
 
     df['content'].astype(str) #content列转换为字符格式
     
@@ -1508,7 +1509,7 @@ def Get_known_from_from_xls_image(origin_pdf_xls_path, paddle_ocr):
         temp_df.columns=['content']
         tax_numbers_df = temp_df.loc[temp_df['content'].notna(),:]
         if len(tax_numbers_df) > 0:
-            our_number = '91370202664517678E'
+            our_number = ''
             known_dict['05购方税号'] = our_number
             values = tax_numbers_df.loc[tax_numbers_df['content']!=our_number,'content'].values
             if len(values)>0:
@@ -1625,10 +1626,7 @@ def Check_result(result_pandas): #->Dataframe
         edit_pandas.loc[:,'06品名'].replace(to_replace = '^\s',value='',regex=True)
     # 字段修正：公司名错别字：
     comp_dict = {
-        '招远驿洋工具制造有限公司' : '招远泽洋工具制造有限公司',
-        '青岛利棋精密机械有限公司' : '青岛利祺精密机械有限公司',
-        '青岛恒样瑞酒店用品制造有限公司' : '青岛恒祥瑞酒店用品制造有限公司',
-        '兰陵县恒样瑞不锈钢制品有限公司' : '兰陵县恒祥瑞不锈钢制品有限公司'
+        '有限公司' : '有限公司',
         }
     edit_pandas = edit_pandas.replace({'17销方':comp_dict})
     # 字段修正 通过文件读入字典修正
@@ -2104,8 +2102,8 @@ if __name__ == '__main__':
     print('\n',datetime.now().strftime("%H:%M:%S"),'Program start running...\n')
     killexcel()
 
-    user_name = '青岛恒祥瑞贸易有限公司'
-    user_code = '91370202664517678E'
+    user_name = ''
+    user_code = ''
 
     reserve_template_before = True #默认为True：保留之前的中间文件,False:删除中间文件,全新运行。
     ocr_excel_out = True #True:输出临时excel文件
